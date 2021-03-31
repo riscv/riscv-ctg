@@ -126,6 +126,77 @@ def gen_usign_dataset(bit_width):
     data += [int(t1,2),int(t2,2)]
     return list(set(data))
 
+def gen_simd_sign_dataset(bit_width):
+    '''
+    Function to generate the signed data set with datapoints from the following patterns.
+     - alternating ones
+     - alternating zeros
+     - walking ones
+     - walking zeros
+     - max val
+     - min val
+     - max val/2
+     - min val/2
+     - [-10,10]
+     - (2**bit_width)-1
+     - -(2**bit_width)
+
+     :param bit_width: integer defining the size of the input
+     :type bit_width: int
+     :return: a list of integers
+    '''
+    rval_w0_base = ['1']*(bit_width-1)+['0']
+    rval_w1_base = ['0']*(bit_width-1)+['1']
+    data = [((2**n)-1) for n in range(bit_width)]
+    data += [-1]
+    data += [-(2**n) for n in range(bit_width)]
+    data += [(-2**(bit_width-1)),int((-2**(bit_width-1))/2),0,(2**(bit_width-1)-1),int((2**(bit_width-1)-1)/2)] + list(range(-10,10))
+    data += [twos(''.join(rval_w1_base[n:] + rval_w1_base[:n]),bit_width) for n in range(bit_width)]
+    data += [twos(''.join(rval_w0_base[n:] + rval_w0_base[:n]),bit_width) for n in range(bit_width)]
+    t1 =( '' if bit_width%2 == 0 else '1') + ''.join(['01']*int(bit_width/2))
+    t2 =( '' if bit_width%2 == 0 else '0') + ''.join(['10']*int(bit_width/2))
+    data += [twos(t1,bit_width),twos(t2,bit_width)]
+    return list(set(data))
+
+def gen_simd_usign_dataset(bit_width):
+    '''
+    Function to generate the unsigned dataset
+     - alternating ones
+     - alternating zeros
+     - walking ones
+     - walking zeros
+     - max val
+     - min val
+     - max val/2
+     - min val/2
+
+     :param bit_width: integer defining the size of the input
+     :type bit_width: int
+     :return: a list of integers
+    '''
+    rval_w0_base = ['1']*(bit_width-1)+['0']
+    rval_w1_base = ['0']*(bit_width-1)+['1']
+    data = [0,((2**bit_width)-1),int(((2**bit_width)-1)/2)]
+    data += [int(''.join(rval_w1_base[n:] + rval_w1_base[:n]),2) for n in range(bit_width)]
+    data += [int(''.join(rval_w0_base[n:] + rval_w0_base[:n]),2) for n in range(bit_width)]
+    t1 =( '' if bit_width%2 == 0 else '1') + ''.join(['01']*int(bit_width/2))
+    t2 =( '' if bit_width%2 == 0 else '0') + ''.join(['10']*int(bit_width/2))
+    data += [int(t1,2),int(t2,2)]
+    return list(set(data))
+
+def gen_simd_sp_dataset(xlen,bit_width,sign=True):
+    '''
+    Function generates a special dataset of interesting values for simd instruction.
+    '''
+    data_len = xlen//bit_width
+    data = gen_sp_dataset(bit_width,True)
+    data = (list(map(lambda x: (x & ((1<<bit_width) - 1)), data)))
+    dataset = [data[i] for i in range(len(data))]
+
+    for j in range(data_len-1):
+        dataset = [(dataset[i] << bit_width) | data[i] for i in range(len(dataset))]
+    return dataset
+
 template_file = os.path.join(root,"data/template.yaml")
 
 usage = Template('''// -----------
