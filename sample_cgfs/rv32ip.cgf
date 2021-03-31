@@ -1,0 +1,61 @@
+# For Licence details look at https://gitlab.com/incoresemi/riscv-compliance/riscv_ctg/-/blob/master/LICENSE.incore
+
+add8:
+    config: 
+      - check ISA:=regex(.*I.*P.*)
+    opcode: 
+      add8: 0
+    rs1: 
+      <<: *all_regs
+    rs2: 
+      <<: *all_regs
+    rd: 
+      <<: *all_regs
+    op_comb: 
+      <<: *rfmt_op_comb
+    val_comb:
+      abstract_comb:
+        <<: [*rs1val_walking, *rs2val_walking]
+        'simd_base_val("rs1_val", xlen, 8, signed=True)': 0
+        'simd_base_val("rs2_val", xlen, 8, signed=True)': 0
+        'simd_val_comb(xlen, 8, signed=True)': 0
+        'simd_sp_dataset(xlen, 8)': 0
+
+add16:
+    config: 
+      - check ISA:=regex(.*I.*P.*)
+    opcode: 
+      add16: 0
+    rs1: 
+      <<: *all_regs
+    rs2: 
+      <<: *all_regs
+    rd: 
+      <<: *all_regs
+    op_comb: 
+      <<: *rfmt_op_comb
+    val_comb:
+      abstract_comb:
+        <<: [*rs1val_walking, *rs2val_walking]
+        'simd_base_val("rs1_val", xlen, 16, signed=True)': 0
+        'simd_base_val("rs2_val", xlen, 16, signed=True)': 0
+        'simd_val_comb(xlen, 16, signed=True)': 0
+        'simd_sp_dataset(xlen, 16)': 0
+
+sclip8:
+    config: 
+      - check ISA:=regex(.*I.*P.*)
+    opcode: 
+      sclip8: 0
+    rs1: 
+      <<: *all_regs
+    rd: 
+      <<: *all_regs
+    op_comb: 
+      <<: *ifmt_op_comb
+    val_comb:
+      abstract_comb: 
+        <<: [*rs1val_walking, *rvp_immval_walking]
+        'simd_base_val("rs1_val", xlen, 8, signed=True)': 0
+        'simd_clip("rs1_val","imm_val",3,xlen,8)': 0
+
