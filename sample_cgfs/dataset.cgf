@@ -320,9 +320,3 @@ datasets:
     'walking_ones("imm_val", 12,False)': 0
     'walking_zeros("imm_val", 12,False)': 0
     'alternate("imm_val",12,False)': 0
-
-  rvp_immval_walking: &rvp_immval_walking
-    'walking_ones("imm_val", 3,False)': 0
-    'walking_zeros("imm_val", 3,False)': 0
-    'alternate("imm_val",3,False)': 0
-
