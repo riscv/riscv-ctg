@@ -3,7 +3,6 @@
 import os
 from math import *
 from string import Template
-
 root = os.path.abspath(os.path.dirname(__file__))
 
 cwd = os.getcwd()
@@ -125,6 +124,8 @@ def gen_usign_dataset(bit_width):
     t2 =( '' if bit_width%2 == 0 else '0') + ''.join(['10']*int(bit_width/2))
     data += [int(t1,2),int(t2,2)]
     return list(set(data))
+
+
 
 template_file = os.path.join(root,"data/template.yaml")
 
